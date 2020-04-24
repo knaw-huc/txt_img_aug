@@ -8,19 +8,18 @@ import sys
 
 Path("output").mkdir(parents=True, exist_ok=True)
 
-image = None
+imagePath = "testimage.png"
 seed = None
 for arg in sys.argv:
     name_val = arg.split("=")
     if str.startswith(name_val[0], "image"):
-        image = imageio.imread(name_val[1])
+        imagePath = name_val[1]
     elif str.startswith(name_val[0], "seed"):
-        seed = int(name_val[1])
+        seed = float(name_val[1])
 
+image = imageio.imread(imagePath)
 
-if image is None:
-    print("using default image: testimage.png")
-    image = imageio.imread("testimage.png")
+print("using image: {}".format(imagePath))
 
 augs = (tia.add_gausian_noise, tia.change_gamma_contrast, tia.shear, tia.blur)
 
