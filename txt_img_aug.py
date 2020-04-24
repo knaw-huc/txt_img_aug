@@ -25,8 +25,8 @@ class TxtImgAug:
         return contrast.augment_image(image)
 
     def shear(self, image: np.ndarray) -> np.ndarray:
-        shearx = random.normal() * 0.03
-        sheary = random.normal() * 0.05
+        shearx = random.normal() * 0.2
+        sheary = random.normal() * 0.2
         shear = iaa.Affine(shear=(shearx, sheary))
         
         return shear.augment_image(image)
