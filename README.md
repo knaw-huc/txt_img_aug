@@ -10,15 +10,15 @@
 pip3 install -r requirements.txt
 ```
 
-### Test the library: 
+### Image augmentation: 
 ```
-python3 test_package.py
+python3 image_augmentation.py
 ```
 With custom image:
 ```
-python3 test_package.py image=/full/path/to/image
+python3 image_augmentation.py image=/full/path/to/image
 ```
 With custom random seed of `1`:
 ```
-python3 test_package.py image=1
+python3 image_augmentation.py seed=1
 ```
