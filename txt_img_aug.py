@@ -59,13 +59,17 @@ class TxtImgAug:
         
         return np.asarray(new_image)
     
-    def scale(self, image:np.ndarray, width:int=None, height:int=None, padding:str="WHITE") -> np.ndarray:
+    def scale(self, image:np.ndarray, width:int=None, height:int=None, padding:str="WHITE", max_scale:int=4) -> np.ndarray:
         if height is None and width is None:
             return image
 
         real_image = Image.fromarray(image)
-        to_height = height if height is not None and height and height < real_image.height else real_image.height
-        to_width = width if width is not None and width and width < real_image.width else real_image.width
+
+        max_height = real_image.height * max_scale
+        max_width = real_image.width * max_scale
+        
+        to_height = height if height is not None and height and height < max_height else max_height
+        to_width = width if width is not None and width and width < max_width else max_width
         real_image = real_image.resize(size=(to_width, to_height))
         
         return np.asarray(real_image)
