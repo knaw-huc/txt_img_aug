@@ -2,6 +2,7 @@
 import imgaug.augmenters as iaa
 import numpy as np
 import numpy.random as random
+from PIL import Image
 
 class TxtImgAug:
 
@@ -37,3 +38,34 @@ class TxtImgAug:
         blur = iaa.GaussianBlur(sigma=(sigmastart, sigmaend))
 
         return blur.augment_image(image)
+
+    def elastic_defromation(self, image: np.ndarray) -> np.ndarray:
+        alpha = random.normal(scale=10) * 3
+    
+        alpha = alpha if alpha > 0 else alpha * -1
+
+        deform = iaa.ElasticTransformation(alpha=alpha)
+
+        return deform.augment(image=image)
+
+    def pad(self, image: np.ndarray, width:int=None, height:int=None, padding:str="WHITE") -> np.ndarray:
+        real_image = Image.fromarray(image)
+        new_height = height if height is not None else real_image.height
+        new_width = width if width is not None else real_image.width
+        
+        new_image = Image.new("RGBA", (new_width, new_height), padding)
+        new_image.paste(real_image, (0, 0), real_image)
+        new_image.convert('RGB')
+        
+        return np.asarray(new_image)
+    
+    def scale(self, image:np.ndarray, width:int=None, height:int=None, padding:str="WHITE") -> np.ndarray:
+        if height is None and width is None:
+            return image
+
+        real_image = Image.fromarray(image)
+        to_height = height if height is not None and height and height < real_image.height else real_image.height
+        to_width = width if width is not None and width and width < real_image.width else real_image.width
+        real_image = real_image.resize(size=(to_width, to_height))
+        
+        return np.asarray(real_image)
