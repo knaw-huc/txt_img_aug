@@ -1,7 +1,8 @@
-import imageio
+from PIL import Image
 from txt_img_aug import TxtImgAug
 from pathlib import Path
 import sys
+import numpy as np
 
 imagePath = "testimage.png"
 seed = None
@@ -16,12 +17,12 @@ for arg in sys.argv:
         seed = int(name_val[1])
     elif name_val[0].strip() == "padding":
         padding = name_val[1].strip() if name_val[1].strip() == "BLACK" else "WHITE"
-    elif name_val[0].strip() =="height":
+    elif name_val[0].strip() == "height":
         resize_height = int(name_val[1])
-    elif  name_val[0].strip() == "width":
+    elif name_val[0].strip() == "width":
         resize_width = int(name_val[1])
 
-image = imageio.imread(imagePath)
+image = np.asarray(Image.open(imagePath))
 
 print("using image: {}".format(imagePath))
 print("padding colour: {}".format(padding))
@@ -33,9 +34,9 @@ tia = TxtImgAug(seed)
 outputPath = "output/page_deformation"
 Path(outputPath).mkdir(parents=True, exist_ok=True)
 
-for no in range(0,50):
+for no in range(0, 50):
     deformed = tia.elastic_defromation(image)
     deformed = tia.scale(deformed, resize_width, resize_height)
     deformed = tia.pad(deformed, resize_width, resize_height, padding)
 
-    imageio.imwrite("{}/testimage{}.png".format(outputPath, no), deformed)
+    Image.fromarray(deformed).save("{}/testimage{}.png".format(outputPath, no))
